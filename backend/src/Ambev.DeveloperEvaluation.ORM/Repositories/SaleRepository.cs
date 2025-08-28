@@ -37,4 +37,24 @@ public class SaleRepository : ISaleRepository
         await _context.SaveChangesAsync(cancellationToken);
         return true;
     }
+
+    public async Task<bool> UpdateAsync(Guid id, Sale sale, CancellationToken cancellationToken = default)
+    {
+        var recordedSale = await GetByIdAsync(id, cancellationToken);
+        if (recordedSale == null)
+            return false;
+
+        recordedSale.SaleNumber = sale.SaleNumber;
+        recordedSale.SaleDate = sale.SaleDate;
+        recordedSale.CustomerId = sale.CustomerId;
+        recordedSale.CustomerName = sale.CustomerName;
+        recordedSale.Branch = sale.Branch;
+        recordedSale.TotalAmount = sale.TotalAmount;
+        recordedSale.Cancelled = sale.Cancelled;
+
+        recordedSale.Items = sale.Items;
+
+        await _context.SaveChangesAsync(cancellationToken);
+        return true;
+    }
 }

@@ -16,7 +16,7 @@ public class CreateSaleRequest
     [Required]
     public string Branch { get; set; } = string.Empty;
     [Required]
-    public List<CreateSaleItemRequest> Items { get; set; } = new();
+    public List<CreateSaleItemRequest> Items { get; set; } = [];
 }
 
 public class CreateSaleItemRequest

@@ -30,4 +30,13 @@ public interface ISaleRepository
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>True if the sale was deleted, false if not found</returns>
     Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Updates a sale from the repository
+    /// </summary>
+    /// <param name="id">The unique identifier of the sale to update</param>
+    /// <param name="sale">The sale to create</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>True if the sale was updated, false if not found</returns>
+    Task<bool> UpdateAsync(Guid id, Sale sale, CancellationToken cancellationToken = default);
 }

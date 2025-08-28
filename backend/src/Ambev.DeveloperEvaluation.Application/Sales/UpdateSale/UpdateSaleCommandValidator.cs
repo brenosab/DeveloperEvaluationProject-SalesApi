@@ -1,23 +1,23 @@
 using FluentValidation;
 
-namespace Ambev.DeveloperEvaluation.Application.Sales.CreateSale;
+namespace Ambev.DeveloperEvaluation.Application.Sales.UpdateSale;
 
-public class CreateSaleCommandValidator : AbstractValidator<CreateSaleCommand>
+public class UpdateSaleCommandValidator : AbstractValidator<UpdateSaleCommand>
 {
-    public CreateSaleCommandValidator()
+    public UpdateSaleCommandValidator()
     {
         RuleFor(x => x.SaleDate).NotEmpty();
         RuleFor(x => x.CustomerId).NotEmpty();
         RuleFor(x => x.Branch).NotEmpty();
         RuleFor(x => x.Items)
             .NotEmpty().WithMessage("At least one item is required.")
-            .ForEach(itemRule => itemRule.SetValidator(new CreateSaleItemCommandValidator()));
+            .ForEach(itemRule => itemRule.SetValidator(new UpdateSaleItemCommandValidator()));
     }
 }
 
-public class CreateSaleItemCommandValidator : AbstractValidator<CreateSaleItemCommand>
+public class UpdateSaleItemCommandValidator : AbstractValidator<UpdateSaleItemCommand>
 {
-    public CreateSaleItemCommandValidator()
+    public UpdateSaleItemCommandValidator()
     {
         RuleFor(x => x.ProductId).NotEmpty();
         RuleFor(x => x.Quantity)

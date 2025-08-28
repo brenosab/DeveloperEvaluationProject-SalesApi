@@ -28,6 +28,15 @@ public class CreateSaleHandler : IRequestHandler<CreateSaleCommand, CreateSaleRe
             throw new ValidationException(validationResult.Errors);
 
         var sale = _mapper.Map<Sale>(command);
+
+        // Aplicar regras de negócio nos itens
+        foreach (var item in sale.Items)
+        {
+            item.ApplyBusinessRules();
+        }
+        // Calcular o total da venda
+        sale.TotalAmount = sale.Items.Sum(i => i.Total);
+
         var createdSale = await _saleRepository.CreateAsync(sale, cancellationToken);
         var result = _mapper.Map<CreateSaleResult>(createdSale);
         return result;
