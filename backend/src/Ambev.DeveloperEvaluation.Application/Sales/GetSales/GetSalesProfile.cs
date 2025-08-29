@@ -1,7 +1,10 @@
-using AutoMapper;
+using Ambev.DeveloperEvaluation.Application.Sales.GetSale;
+using Ambev.DeveloperEvaluation.Common.Pagination;
 using Ambev.DeveloperEvaluation.Domain.Entities;
+using Ambev.DeveloperEvaluation.Domain.Filters;
+using AutoMapper;
 
-namespace Ambev.DeveloperEvaluation.Application.Sales.GetSale;
+namespace Ambev.DeveloperEvaluation.Application.Sales.GetSales;
 
 /// <summary>
 /// Profile for mapping between Sale entity and GetSaleResponse
@@ -12,11 +15,9 @@ public class GetSalesProfile : Profile
     /// Initializes the mappings for GetSale operation
     /// </summary>
     public GetSalesProfile()
-    {
-        // Map PagedResult<Sale> to PagedResult<GetSaleResult>
-        CreateMap(typeof(PagedResult<>), typeof(PagedResult<>))
-            .ConvertUsing(typeof(PagedResultConverter<,>));
-        
+    {        
         CreateMap<GetSalesCommand, SaleFilter>();
+        CreateMap<Sale, GetSaleResult>();
+        CreateMap<PagedResult<Sale>, PagedResult<GetSaleResult>>();
     }
 }

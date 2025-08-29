@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-
-using Ambev.DeveloperEvaluation.Domain.Common;
+﻿using Ambev.DeveloperEvaluation.Domain.Common;
 
 namespace Ambev.DeveloperEvaluation.Domain.Entities;
 
@@ -64,7 +57,6 @@ public class SaleItem : BaseEntity
     public string Image { get; set; } = string.Empty;
     public decimal RatingRate { get; set; }
     public int RatingCount { get; set; }
-
     public int Quantity { get; set; }
     public decimal UnitPrice { get; set; }
     public decimal Discount { get; set; }

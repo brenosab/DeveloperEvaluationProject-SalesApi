@@ -1,6 +1,6 @@
 using Ambev.DeveloperEvaluation.Common.Pagination;
-using Ambev.DeveloperEvaluation.Application.Sales.GetSales;
 using Ambev.DeveloperEvaluation.Domain.Entities;
+using Ambev.DeveloperEvaluation.Domain.Filters;
 
 namespace Ambev.DeveloperEvaluation.Domain.Repositories;
 

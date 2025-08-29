@@ -1,6 +1,8 @@
 using Ambev.DeveloperEvaluation.Domain.Entities;
+using Ambev.DeveloperEvaluation.Domain.Filters;
 using Ambev.DeveloperEvaluation.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Dynamic.Core;
 
 namespace Ambev.DeveloperEvaluation.ORM.Repositories;
 
@@ -60,18 +62,26 @@ public class SaleRepository : ISaleRepository
         return true;
     }
 
-    public async Task<PagedResult<Sale>> GetPagedAsync(SaleFilter filter, CancellationToken cancellationToken = default)
+    public async Task<Common.Pagination.PagedResult<Sale>> GetPagedAsync(SaleFilter filter, CancellationToken cancellationToken = default)
     {
         IQueryable<Sale> query = BuildQuery(filter);
         var totalCount = await query.CountAsync(cancellationToken);
 
+        if (!string.IsNullOrWhiteSpace(filter.OrderBy))
+        {
+            query = query.OrderBy(filter.OrderBy);
+        }
+        else
+        {
+            query = query.OrderByDescending(s => s.SaleDate);
+        }
+
         var items = await query
-            .OrderByDescending(s => s.Date)
             .Skip((filter.Page - 1) * filter.PageSize)
             .Take(filter.PageSize)
             .ToListAsync(cancellationToken);
 
-        return new PagedResult<Sale>(items, totalCount, filter.Page, filter.PageSize);
+        return new Common.Pagination.PagedResult<Sale>(items, totalCount, filter.Page, filter.PageSize);
     }
 
     /// <summary>
@@ -83,18 +93,27 @@ public class SaleRepository : ISaleRepository
             .Include(s => s.Items)
             .AsQueryable();
         
-        if (filter.StartDate.HasValue)
-        {
-            query = query.Where(s => s.Date >= filter.StartDate.Value);
-        }
-        if (filter.EndDate.HasValue)
-        {
-            query = query.Where(s => s.Date <= filter.EndDate.Value);
-        }
+        if (filter.MinSaleDate.HasValue)
+            query = query.Where(s => s.SaleDate >= filter.MinSaleDate.Value);
+
+        if (filter.MaxSaleDate.HasValue)
+            query = query.Where(s => s.SaleDate <= filter.MaxSaleDate.Value);
+
+        if (!string.IsNullOrWhiteSpace(filter.SaleNumber))
+            query = query.Where(s => s.SaleNumber.Contains(filter.SaleNumber));
+
         if (!string.IsNullOrWhiteSpace(filter.CustomerName))
-        {
-            query = query.Where(s => s.Customer.Name.Contains(filter.CustomerName));
-        }
+            query = query.Where(s => s.CustomerName.Contains(filter.CustomerName));
+        
+        if (!string.IsNullOrWhiteSpace(filter.Branch))
+            query = query.Where(s => s.Branch.Contains(filter.Branch));
+
+        if (!string.IsNullOrWhiteSpace(filter.ItemDescription))
+            query = query.Where(s => s.Items.Any(i => i.Description.Contains(filter.ItemDescription)));
+
+        if (!string.IsNullOrWhiteSpace(filter.ItemCategory))
+            query = query.Where(s => s.Items.Any(i => i.Category == filter.ItemCategory));
+        
         return query;
     }
 }

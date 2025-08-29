@@ -1,6 +1,4 @@
-using System.ComponentModel.DataAnnotations;
-using Ambev.DeveloperEvaluation.WebApi.Features.Sales.GetSales;
-using Ambev.DeveloperEvaluation.Common.Pagination;
+using FluentValidation;
 
 namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales.GetSales;
 

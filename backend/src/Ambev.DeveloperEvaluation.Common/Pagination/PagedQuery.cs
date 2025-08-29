@@ -29,9 +29,4 @@ public class PagedQuery : IPagingFilter, IOrderFilter
     /// Order by expression (e.g., "saleDate desc, totalAmount asc")
     /// </summary>
     public string? OrderBy { get; set; }
-
-    /// <summary>
-    /// Optional search/filter string (can be used for free text or advanced filtering)
-    /// </summary>
-    public string? Filter { get; set; }
 }

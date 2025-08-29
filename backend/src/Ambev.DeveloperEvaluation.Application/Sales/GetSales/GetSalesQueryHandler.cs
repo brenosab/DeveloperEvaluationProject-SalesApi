@@ -1,9 +1,10 @@
 using MediatR;
+using FluentValidation;
+using AutoMapper;
 using Ambev.DeveloperEvaluation.Common.Pagination;
 using Ambev.DeveloperEvaluation.Domain.Repositories;
-using AutoMapper;
-using Ambev.DeveloperEvaluation.Domain.Entities;
 using Ambev.DeveloperEvaluation.Domain.Filters;
+using Ambev.DeveloperEvaluation.Application.Sales.GetSale;
 
 namespace Ambev.DeveloperEvaluation.Application.Sales.GetSales;
 public class GetSalesQueryHandler : IRequestHandler<GetSalesCommand, PagedResult<GetSaleResult>>
@@ -27,7 +28,7 @@ public class GetSalesQueryHandler : IRequestHandler<GetSalesCommand, PagedResult
 
         var filter = _mapper.Map<SaleFilter>(command);
         var pagedSales = await _saleRepository.GetPagedAsync(filter, cancellationToken);
-
+        
         return _mapper.Map<PagedResult<GetSaleResult>>(pagedSales);
     }
 }

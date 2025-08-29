@@ -30,7 +30,13 @@ public class SaleItemConfiguration : IEntityTypeConfiguration<SaleItem>
         builder.HasKey(i => i.Id);
         builder.Property(i => i.Id).HasColumnType("uuid").HasDefaultValueSql("gen_random_uuid()");
         builder.Property(i => i.ProductId).IsRequired();
-        builder.Property(i => i.ProductName).IsRequired().HasMaxLength(100);
+        builder.Property(i => i.Title).IsRequired().HasMaxLength(100);
+        builder.Property(i => i.Price).HasColumnType("decimal(18,2)");
+        builder.Property(i => i.Description).IsRequired().HasMaxLength(100);
+        builder.Property(i => i.Category).HasMaxLength(100);
+        builder.Property(i => i.Image).HasMaxLength(255);
+        builder.Property(i => i.RatingRate).HasColumnType("decimal(5,2)");
+        builder.Property(i => i.RatingCount);
         builder.Property(i => i.Quantity).IsRequired();
         builder.Property(i => i.UnitPrice).HasColumnType("decimal(18,2)");
         builder.Property(i => i.Discount).HasColumnType("decimal(5,2)");

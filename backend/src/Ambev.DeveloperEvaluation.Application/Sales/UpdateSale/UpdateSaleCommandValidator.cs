@@ -21,7 +21,7 @@ public class UpdateSaleItemCommandValidator : AbstractValidator<UpdateSaleItemCo
     {
         RuleFor(x => x.ProductId).NotEmpty();
         RuleFor(x => x.Title).NotEmpty();
-        RuleFor(x => x.Price).GreaterThan(0);
+        RuleFor(x => x.Price).GreaterThanOrEqualTo(0);
         RuleFor(x => x.Description).NotEmpty();
         RuleFor(x => x.Category).NotEmpty();
         RuleFor(x => x.Image).NotEmpty();

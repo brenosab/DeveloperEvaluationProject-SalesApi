@@ -1,12 +1,14 @@
 using Ambev.DeveloperEvaluation.Application.Sales.CreateSale;
 using Ambev.DeveloperEvaluation.Application.Sales.DeleteSale;
 using Ambev.DeveloperEvaluation.Application.Sales.GetSale;
+using Ambev.DeveloperEvaluation.Application.Sales.GetSales;
 using Ambev.DeveloperEvaluation.Application.Sales.UpdateSale;
 using Ambev.DeveloperEvaluation.Application.Users.DeleteUser;
 using Ambev.DeveloperEvaluation.WebApi.Common;
 using Ambev.DeveloperEvaluation.WebApi.Features.Sales.CreateSale;
 using Ambev.DeveloperEvaluation.WebApi.Features.Sales.DeleteSale;
 using Ambev.DeveloperEvaluation.WebApi.Features.Sales.GetSale;
+using Ambev.DeveloperEvaluation.WebApi.Features.Sales.GetSales;
 using Ambev.DeveloperEvaluation.WebApi.Features.Sales.UpdateSale;
 using AutoMapper;
 using MediatR;
@@ -87,29 +89,19 @@ public class SalesController : BaseController
     /// Gets a paginated, filtered, and sorted list of sales
     /// </summary>
     [HttpGet]
-    [ProducesResponseType(typeof(ApiResponseWithData<GetSalesResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(GetSalesResponse), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetSales([FromQuery] GetSalesRequest request, CancellationToken cancellationToken)
     {
         var validator = new GetSalesRequestValidator();
         var validationResult = await validator.ValidateAsync(request, cancellationToken);
+        
         if (!validationResult.IsValid)
             return BadRequest(validationResult.Errors);
 
         var command = _mapper.Map<GetSalesCommand>(request);
         var pagedResult = await _mediator.Send(command, cancellationToken);
-        var response = new GetSalesResponse
-        {
-            Items = pagedResult.Items.Select(_mapper.Map<GetSaleResponse>).ToList(),
-            TotalItems = pagedResult.TotalItems,
-            CurrentPage = pagedResult.CurrentPage,
-            TotalPages = pagedResult.TotalPages
-        };
-        return Ok(new ApiResponseWithData<GetSalesResponse>
-        {
-            Success = true,
-            Message = "Sales retrieved successfully",
-            Data = response
-        });
+
+        return Ok(_mapper.Map<GetSalesResponse>(pagedResult));
     }
 
     /// <summary>
