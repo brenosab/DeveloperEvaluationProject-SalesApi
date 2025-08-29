@@ -31,9 +31,11 @@ public class UpdateSaleHandler : IRequestHandler<UpdateSaleCommand, UpdateSaleRe
         }
         sale.TotalAmount = sale.Items.Sum(i => i.Total);
 
-        var updatedSale = await _saleRepository.UpdateAsync(command.Id, sale, cancellationToken);
-        if (!updatedSale)
+        var success = await _saleRepository.UpdateAsync(command.Id, sale, cancellationToken);
+        if (!success)
             throw new KeyNotFoundException($"Sale with ID {command.Id} not found");
+
+        var updatedSale = await _saleRepository.GetByIdAsync(command.Id, cancellationToken);
 
         var result = _mapper.Map<UpdateSaleResult>(updatedSale);
         return result;

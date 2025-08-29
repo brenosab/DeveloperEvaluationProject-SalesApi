@@ -14,7 +14,7 @@ public class CreateSaleProfile : Profile
             .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.CustomerName ?? string.Empty))
             .ForMember(dest => dest.Branch, opt => opt.MapFrom(src => src.Branch))
             .ForMember(dest => dest.Items, opt => opt.MapFrom(src => src.Items))
-            .ForMember(dest => dest.TotalAmount, opt => opt.Ignore()) // Calculado posteriormente
+            .ForMember(dest => dest.TotalAmount, opt => opt.Ignore()) // Calculated later
             .ForMember(dest => dest.Cancelled, opt => opt.Ignore());
 
         CreateMap<CreateSaleItemCommand, SaleItem>()
@@ -22,8 +22,11 @@ public class CreateSaleProfile : Profile
             .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.ProductName ?? string.Empty))
             .ForMember(dest => dest.Quantity, opt => opt.MapFrom(src => src.Quantity))
             .ForMember(dest => dest.UnitPrice, opt => opt.MapFrom(src => src.UnitPrice))
-            .ForMember(dest => dest.Discount, opt => opt.Ignore()) // Calculado posteriormente
-            .ForMember(dest => dest.Total, opt => opt.Ignore()) // Calculado posteriormente
+            .ForMember(dest => dest.Discount, opt => opt.Ignore()) // Calculated later
+            .ForMember(dest => dest.Total, opt => opt.Ignore()) // Calculated later
             .ForMember(dest => dest.Cancelled, opt => opt.Ignore());
+
+        CreateMap<Sale, CreateSaleResult>();
+
     }
 }

@@ -8,7 +8,7 @@ public class GetSaleResponse
     public string CustomerName { get; set; } = string.Empty;
     public string Branch { get; set; } = string.Empty;
     public decimal TotalAmount { get; set; }
-    public List<GetSaleItemResponse> Items { get; set; } = new();
+    public List<GetSaleItemResponse> Items { get; set; } = [];
     public bool Cancelled { get; set; }
 }
 

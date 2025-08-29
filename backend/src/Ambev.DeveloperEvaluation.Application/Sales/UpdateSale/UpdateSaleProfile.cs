@@ -27,5 +27,8 @@ public class UpdateSaleProfile : Profile
             .ForMember(dest => dest.Discount, opt => opt.Ignore())
             .ForMember(dest => dest.Total, opt => opt.Ignore())
             .ForMember(dest => dest.Cancelled, opt => opt.Ignore());
+
+        CreateMap<Sale, UpdateSaleResult>();
+        CreateMap<SaleItem, UpdateSaleItemResult>();
     }
 }

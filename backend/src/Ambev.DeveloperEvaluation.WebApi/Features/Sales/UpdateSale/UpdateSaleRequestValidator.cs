@@ -6,7 +6,6 @@ public class UpdateSaleRequestValidator : AbstractValidator<UpdateSaleRequest>
 {
     public UpdateSaleRequestValidator()
     {
-        RuleFor(x => x.Id).NotEmpty();
         RuleFor(x => x.SaleNumber).NotEmpty();
         RuleFor(x => x.SaleDate).NotEmpty();
         RuleFor(x => x.CustomerId).NotEmpty();

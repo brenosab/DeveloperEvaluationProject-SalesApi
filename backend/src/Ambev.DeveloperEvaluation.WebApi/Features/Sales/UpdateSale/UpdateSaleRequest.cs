@@ -1,12 +1,10 @@
 using System.ComponentModel.DataAnnotations;
-using System.Collections.Generic;
 
 namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales.UpdateSale;
 
 public class UpdateSaleRequest
 {
-    [Required]
-    public Guid Id { get; set; }
+
     [Required]
     public string SaleNumber { get; set; } = string.Empty;
     [Required]
@@ -18,7 +16,7 @@ public class UpdateSaleRequest
     [Required]
     public string Branch { get; set; } = string.Empty;
     [Required]
-    public List<UpdateSaleItemRequest> Items { get; set; } = new();
+    public List<UpdateSaleItemRequest> Items { get; set; } = [];
     public bool Cancelled { get; set; }
 }
 

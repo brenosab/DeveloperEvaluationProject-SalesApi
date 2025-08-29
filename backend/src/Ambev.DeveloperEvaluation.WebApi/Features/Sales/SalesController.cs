@@ -65,7 +65,7 @@ public class SalesController : BaseController
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>The sale details if found</returns>
     [HttpGet("{id}")]
-    [ProducesResponseType(typeof(ApiResponseWithData<GetSaleResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(GetSaleResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetSale([FromRoute] Guid id, CancellationToken cancellationToken)
@@ -80,12 +80,7 @@ public class SalesController : BaseController
         var command = _mapper.Map<GetSaleCommand>(request.Id);
         var result = await _mediator.Send(command, cancellationToken);
 
-        return Ok(new ApiResponseWithData<GetSaleResponse>
-        {
-            Success = true,
-            Message = "Sale retrieved successfully",
-            Data = _mapper.Map<GetSaleResponse>(result)
-        });
+        return Ok(_mapper.Map<GetSaleResponse>(result));
     }
 
     /// <summary>
@@ -97,9 +92,9 @@ public class SalesController : BaseController
     [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> UpdateSale([FromRoute] Guid id, [FromBody] UpdateSaleRequest request, CancellationToken cancellationToken)
     {
-        if (id != request.Id)
-            return BadRequest("Route id and request id do not match.");
-        
+        if (id == Guid.Empty)
+            return BadRequest("The route id is invalid.");
+
         var validator = new UpdateSaleRequestValidator();
         var validationResult = await validator.ValidateAsync(request, cancellationToken);
         
@@ -107,14 +102,14 @@ public class SalesController : BaseController
             return BadRequest(validationResult.Errors);
         
         var command = _mapper.Map<UpdateSaleCommand>(request);
+        command = command with { Id = id };
+
         var result = await _mediator.Send(command, cancellationToken);
-        
-        var response = _mapper.Map<UpdateSaleResponse>(result);
         return Ok(new ApiResponseWithData<UpdateSaleResponse>
         {
             Success = true,
             Message = "Sale updated successfully",
-            Data = response
+            Data = _mapper.Map<UpdateSaleResponse>(result)
         });
     }
 
