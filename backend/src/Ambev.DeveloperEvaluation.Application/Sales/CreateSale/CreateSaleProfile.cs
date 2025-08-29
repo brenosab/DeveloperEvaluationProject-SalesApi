@@ -19,14 +19,21 @@ public class CreateSaleProfile : Profile
 
         CreateMap<CreateSaleItemCommand, SaleItem>()
             .ForMember(dest => dest.ProductId, opt => opt.MapFrom(src => src.ProductId))
-            .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.ProductName ?? string.Empty))
+            .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
+            .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Price))
+            .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
+            .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.Category))
+            .ForMember(dest => dest.Image, opt => opt.MapFrom(src => src.Image))
+            .ForMember(dest => dest.RatingRate, opt => opt.MapFrom(src => src.RatingRate))
+            .ForMember(dest => dest.RatingCount, opt => opt.MapFrom(src => src.RatingCount))
             .ForMember(dest => dest.Quantity, opt => opt.MapFrom(src => src.Quantity))
             .ForMember(dest => dest.UnitPrice, opt => opt.MapFrom(src => src.UnitPrice))
             .ForMember(dest => dest.Discount, opt => opt.Ignore()) // Calculated later
             .ForMember(dest => dest.Total, opt => opt.Ignore()) // Calculated later
             .ForMember(dest => dest.Cancelled, opt => opt.Ignore());
 
-        CreateMap<Sale, CreateSaleResult>();
+    CreateMap<Sale, CreateSaleResult>();
+    CreateMap<SaleItem, CreateSaleItemResult>();
 
     }
 }

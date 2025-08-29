@@ -57,7 +57,14 @@ public class Sale : BaseEntity
 public class SaleItem : BaseEntity
 {
     public Guid ProductId { get; set; }
-    public string ProductName { get; set; } = string.Empty;
+    public string Title { get; set; } = string.Empty;
+    public decimal Price { get; set; }
+    public string Description { get; set; } = string.Empty;
+    public string Category { get; set; } = string.Empty;
+    public string Image { get; set; } = string.Empty;
+    public decimal RatingRate { get; set; }
+    public int RatingCount { get; set; }
+
     public int Quantity { get; set; }
     public decimal UnitPrice { get; set; }
     public decimal Discount { get; set; }

@@ -25,7 +25,19 @@ public class UpdateSaleItemRequest
     [Required]
     public Guid ProductId { get; set; }
     [Required]
-    public string ProductName { get; set; } = string.Empty;
+    public string Title { get; set; } = string.Empty;
+    [Required]
+    public decimal Price { get; set; }
+    [Required]
+    public string Description { get; set; } = string.Empty;
+    [Required]
+    public string Category { get; set; } = string.Empty;
+    [Required]
+    public string Image { get; set; } = string.Empty;
+    [Required]
+    public decimal RatingRate { get; set; }
+    [Required]
+    public int RatingCount { get; set; }
     [Required]
     public int Quantity { get; set; }
     [Required]

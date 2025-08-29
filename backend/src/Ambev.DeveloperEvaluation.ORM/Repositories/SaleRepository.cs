@@ -59,4 +59,42 @@ public class SaleRepository : ISaleRepository
         await _context.SaveChangesAsync(cancellationToken);
         return true;
     }
+
+    public async Task<PagedResult<Sale>> GetPagedAsync(SaleFilter filter, CancellationToken cancellationToken = default)
+    {
+        IQueryable<Sale> query = BuildQuery(filter);
+        var totalCount = await query.CountAsync(cancellationToken);
+
+        var items = await query
+            .OrderByDescending(s => s.Date)
+            .Skip((filter.Page - 1) * filter.PageSize)
+            .Take(filter.PageSize)
+            .ToListAsync(cancellationToken);
+
+        return new PagedResult<Sale>(items, totalCount, filter.Page, filter.PageSize);
+    }
+
+    /// <summary>
+    /// Build the base query with the filters applied.
+    /// </summary>
+    private IQueryable<Sale> BuildQuery(SaleFilter filter)
+    {
+        IQueryable<Sale> query = _context.Sales
+            .Include(s => s.Items)
+            .AsQueryable();
+        
+        if (filter.StartDate.HasValue)
+        {
+            query = query.Where(s => s.Date >= filter.StartDate.Value);
+        }
+        if (filter.EndDate.HasValue)
+        {
+            query = query.Where(s => s.Date <= filter.EndDate.Value);
+        }
+        if (!string.IsNullOrWhiteSpace(filter.CustomerName))
+        {
+            query = query.Where(s => s.Customer.Name.Contains(filter.CustomerName));
+        }
+        return query;
+    }
 }

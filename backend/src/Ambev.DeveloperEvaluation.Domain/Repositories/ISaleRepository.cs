@@ -1,3 +1,5 @@
+using Ambev.DeveloperEvaluation.Common.Pagination;
+using Ambev.DeveloperEvaluation.Application.Sales.GetSales;
 using Ambev.DeveloperEvaluation.Domain.Entities;
 
 namespace Ambev.DeveloperEvaluation.Domain.Repositories;
@@ -39,4 +41,12 @@ public interface ISaleRepository
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>True if the sale was updated, false if not found</returns>
     Task<bool> UpdateAsync(Guid id, Sale sale, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Returns a paginated list of sales
+    /// </summary>
+    /// <param name="filter">The paged filter</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>Paged result of sales</returns>
+    Task<PagedResult<Sale>> GetPagedAsync(SaleFilter filter, CancellationToken cancellationToken = default);
 }

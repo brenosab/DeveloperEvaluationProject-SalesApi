@@ -84,6 +84,35 @@ public class SalesController : BaseController
     }
 
     /// <summary>
+    /// Gets a paginated, filtered, and sorted list of sales
+    /// </summary>
+    [HttpGet]
+    [ProducesResponseType(typeof(ApiResponseWithData<GetSalesResponse>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetSales([FromQuery] GetSalesRequest request, CancellationToken cancellationToken)
+    {
+        var validator = new GetSalesRequestValidator();
+        var validationResult = await validator.ValidateAsync(request, cancellationToken);
+        if (!validationResult.IsValid)
+            return BadRequest(validationResult.Errors);
+
+        var command = _mapper.Map<GetSalesCommand>(request);
+        var pagedResult = await _mediator.Send(command, cancellationToken);
+        var response = new GetSalesResponse
+        {
+            Items = pagedResult.Items.Select(_mapper.Map<GetSaleResponse>).ToList(),
+            TotalItems = pagedResult.TotalItems,
+            CurrentPage = pagedResult.CurrentPage,
+            TotalPages = pagedResult.TotalPages
+        };
+        return Ok(new ApiResponseWithData<GetSalesResponse>
+        {
+            Success = true,
+            Message = "Sales retrieved successfully",
+            Data = response
+        });
+    }
+
+    /// <summary>
     /// Updates an existing sale
     /// </summary>
     [HttpPut("{id}")]
