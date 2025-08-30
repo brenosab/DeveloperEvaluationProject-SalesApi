@@ -3,6 +3,8 @@ using AutoMapper;
 using FluentValidation;
 using MediatR;
 using Ambev.DeveloperEvaluation.Domain.Entities;
+using Ambev.DeveloperEvaluation.Application.Events.Interfaces;
+using Ambev.DeveloperEvaluation.Domain.Events;
 
 namespace Ambev.DeveloperEvaluation.Application.Sales.UpdateSale;
 
@@ -19,13 +21,6 @@ public class UpdateSaleHandler : IRequestHandler<UpdateSaleCommand, UpdateSaleRe
         ISaleRepository saleRepository,
         IMapper mapper,
         IEventDispatcher eventDispatcher)
-    {
-        _saleRepository = saleRepository;
-        _mapper = mapper;
-        _eventDispatcher = eventDispatcher;
-    }
-
-    public UpdateSaleHandler(ISaleRepository saleRepository, IMapper mapper, IEventDispatcher eventDispatcher)
     {
         _saleRepository = saleRepository;
         _mapper = mapper;
@@ -71,7 +66,7 @@ public class UpdateSaleHandler : IRequestHandler<UpdateSaleCommand, UpdateSaleRe
     /// </summary>
     /// <param name="command">The update sale command</param>
     /// <param name="cancellationToken">Cancellation token</param>
-    private async Task ValidateCommandAsync(UpdateSaleCommand command, CancellationToken cancellationToken)
+    private static async Task ValidateCommandAsync(UpdateSaleCommand command, CancellationToken cancellationToken)
     {
         var validator = new UpdateSaleCommandValidator();
         var validationResult = await validator.ValidateAsync(command, cancellationToken);

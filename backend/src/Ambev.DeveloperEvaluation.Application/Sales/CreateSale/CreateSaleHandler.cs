@@ -16,18 +16,15 @@ public class CreateSaleHandler : IRequestHandler<CreateSaleCommand, CreateSaleRe
     private readonly ISaleRepository _saleRepository;
     private readonly IEventDispatcher _eventDispatcher;
     private readonly IMapper _mapper;
-    private readonly IValidator<CreateSaleCommand> _validator;
 
     public CreateSaleHandler(
         ISaleRepository saleRepository,
         IEventDispatcher eventDispatcher,
-        IMapper mapper,
-        IValidator<CreateSaleCommand> validator)
+        IMapper mapper)
     {
         _saleRepository = saleRepository;
         _eventDispatcher = eventDispatcher;
         _mapper = mapper;
-        _validator = validator;
     }
 
     /// <summary>
@@ -59,9 +56,10 @@ public class CreateSaleHandler : IRequestHandler<CreateSaleCommand, CreateSaleRe
     /// </summary>
     /// <param name="command">The create sale command</param>
     /// <param name="cancellationToken">Cancellation token</param>
-    private async Task ValidateCommandAsync(CreateSaleCommand command, CancellationToken cancellationToken)
+    private static async Task ValidateCommandAsync(CreateSaleCommand command, CancellationToken cancellationToken)
     {
-        var validationResult = await _validator.ValidateAsync(command, cancellationToken);
+        var validator = new CreateSaleCommandValidator();
+        var validationResult = await validator.ValidateAsync(command, cancellationToken);
         if (!validationResult.IsValid)
             throw new ValidationException(validationResult.Errors);
     }

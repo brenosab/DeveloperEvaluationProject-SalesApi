@@ -6,9 +6,5 @@ namespace Ambev.DeveloperEvaluation.Application.Events.Interfaces
     {
         Task PublishAsync<TEvent>(TEvent @event, CancellationToken cancellationToken = default)
             where TEvent : IDomainEvent;
-
-        void Register<TEvent>(IEventHandler<TEvent> handler) where TEvent : IDomainEvent;
-        void Unregister<TEvent>(IEventHandler<TEvent> handler) where TEvent : IDomainEvent;
     }
-
 }

@@ -14,22 +14,6 @@ namespace Ambev.DeveloperEvaluation.Application.Events
             _logger = logger;
         }
 
-        public void Register<TEvent>(IEventHandler<TEvent> handler) where TEvent : IDomainEvent
-        {
-            var eventType = typeof(TEvent);
-            if (!_handlers.ContainsKey(eventType))
-                _handlers[eventType] = [];
-
-            _handlers[eventType].Add(handler);
-        }
-
-        public void Unregister<TEvent>(IEventHandler<TEvent> handler) where TEvent : IDomainEvent
-        {
-            var eventType = typeof(TEvent);
-            if (_handlers.ContainsKey(eventType))
-                _handlers[eventType].Remove(handler);
-        }
-
         public async Task PublishAsync<TEvent>(TEvent @event, CancellationToken cancellationToken = default)
             where TEvent : IDomainEvent
         {
