@@ -23,7 +23,12 @@ public class GetSaleHandler : IRequestHandler<GetSaleCommand, GetSaleResult>
         if (!validationResult.IsValid)
             throw new ValidationException(validationResult.Errors);
 
-        var sale = await _saleRepository.GetByIdAsync(command.Id, cancellationToken);
+        var sale = await _saleRepository.GetByIdAsync(
+            command.Id,
+            cancellationToken,
+            s => s.Items
+        );
+
         if (sale == null)
             throw new InvalidOperationException($"Sale with id {command.Id} not found");
 

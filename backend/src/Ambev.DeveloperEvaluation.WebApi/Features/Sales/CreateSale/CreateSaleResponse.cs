@@ -6,8 +6,9 @@ public class CreateSaleResponse
     public string SaleNumber { get; set; } = string.Empty;
     public DateTime SaleDate { get; set; }
     public string CustomerName { get; set; } = string.Empty;
+    public string Branch { get; set; } = string.Empty;
     public decimal TotalAmount { get; set; }
-    public List<CreateSaleItemResponse> Items { get; set; } = new();
+    public List<CreateSaleItemResponse> Items { get; set; } = [];
 }
 
 public class CreateSaleItemResponse

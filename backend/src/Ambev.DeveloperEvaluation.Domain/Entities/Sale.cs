@@ -42,6 +42,16 @@ public class Sale : BaseEntity
     /// Gets or sets whether the sale is cancelled.
     /// </summary>
     public bool Cancelled { get; set; }
+
+    public void ApplyBusinessRules()
+    {
+        foreach (var item in Items)
+        {
+            item.ApplyBusinessRules();
+        }
+
+        TotalAmount = Items.Sum(i => i.Total);
+    }
 }
 
 /// <summary>

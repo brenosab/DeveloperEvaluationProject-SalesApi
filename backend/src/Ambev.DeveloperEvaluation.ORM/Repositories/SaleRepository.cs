@@ -1,6 +1,7 @@
 using Ambev.DeveloperEvaluation.Domain.Entities;
 using Ambev.DeveloperEvaluation.Domain.Filters;
 using Ambev.DeveloperEvaluation.Domain.Repositories;
+using Ambev.DeveloperEvaluation.ORM.Common;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Dynamic.Core;
 
@@ -9,20 +10,13 @@ namespace Ambev.DeveloperEvaluation.ORM.Repositories;
 /// <summary>
 /// Implementation of ISaleRepository using Entity Framework Core
 /// </summary>
-public class SaleRepository : ISaleRepository
+public class SaleRepository : BaseRepository<Sale>, ISaleRepository
 {
     private readonly DefaultContext _context;
 
-    public SaleRepository(DefaultContext context)
+    public SaleRepository(DefaultContext context) : base(context)
     {
         _context = context;
-    }
-
-    public async Task<Sale> CreateAsync(Sale sale, CancellationToken cancellationToken = default)
-    {
-        await _context.Sales.AddAsync(sale, cancellationToken);
-        await _context.SaveChangesAsync(cancellationToken);
-        return sale;
     }
 
     public async Task<Sale?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
@@ -32,37 +26,7 @@ public class SaleRepository : ISaleRepository
             .FirstOrDefaultAsync(o => o.Id == id, cancellationToken);
     }
 
-    public async Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
-    {
-        var sale = await GetByIdAsync(id, cancellationToken);
-        if (sale == null)
-            return false;
-        _context.Sales.Remove(sale);
-        await _context.SaveChangesAsync(cancellationToken);
-        return true;
-    }
-
-    public async Task<bool> UpdateAsync(Guid id, Sale sale, CancellationToken cancellationToken = default)
-    {
-        var recordedSale = await GetByIdAsync(id, cancellationToken);
-        if (recordedSale == null)
-            return false;
-
-        recordedSale.SaleNumber = sale.SaleNumber;
-        recordedSale.SaleDate = sale.SaleDate;
-        recordedSale.CustomerId = sale.CustomerId;
-        recordedSale.CustomerName = sale.CustomerName;
-        recordedSale.Branch = sale.Branch;
-        recordedSale.TotalAmount = sale.TotalAmount;
-        recordedSale.Cancelled = sale.Cancelled;
-
-        recordedSale.Items = sale.Items;
-
-        await _context.SaveChangesAsync(cancellationToken);
-        return true;
-    }
-
-    public async Task<Common.Pagination.PagedResult<Sale>> GetPagedAsync(SaleFilter filter, CancellationToken cancellationToken = default)
+    public async Task<DeveloperEvaluation.Common.Pagination.PagedResult<Sale>> GetPagedAsync(SaleFilter filter, CancellationToken cancellationToken = default)
     {
         IQueryable<Sale> query = BuildQuery(filter);
         var totalCount = await query.CountAsync(cancellationToken);
@@ -81,7 +45,7 @@ public class SaleRepository : ISaleRepository
             .Take(filter.PageSize)
             .ToListAsync(cancellationToken);
 
-        return new Common.Pagination.PagedResult<Sale>(items, totalCount, filter.Page, filter.PageSize);
+        return new DeveloperEvaluation.Common.Pagination.PagedResult<Sale>(items, totalCount, filter.Page, filter.PageSize);
     }
 
     /// <summary>
