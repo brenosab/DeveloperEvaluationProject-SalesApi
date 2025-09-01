@@ -69,17 +69,25 @@ namespace Ambev.DeveloperEvaluation.ORM.Common
         }
 
         /// <summary>
-        /// Updates a entity from the database
+        /// Updates an entity in the database
         /// </summary>
-        /// <param name="id">The unique identifier of the entity to delete</param>
-        /// <param name="entity">The entity to create</param>
+        /// <param name="id">The unique identifier of the entity to update</param>
+        /// <param name="entity">The updated entity</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>True if the entity was updated, false if not found</returns>
         public async Task<bool> UpdateAsync(Guid id, TEntity entity, CancellationToken cancellationToken = default)
         {
-            _context.Update(entity);
+            var existingEntity = await _context.Set<TEntity>().FindAsync([id], cancellationToken: cancellationToken);
+            if (existingEntity == null)
+            {
+                return false;
+            }
+
+            _context.Entry(existingEntity).CurrentValues.SetValues(entity);
             await _context.SaveChangesAsync(cancellationToken);
+
             return true;
         }
+
     }
 }

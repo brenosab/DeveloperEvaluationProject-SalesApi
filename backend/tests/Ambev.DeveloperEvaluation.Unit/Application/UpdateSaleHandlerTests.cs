@@ -7,6 +7,7 @@ using AutoMapper;
 using Bogus;
 using FluentAssertions;
 using NSubstitute;
+using System.Linq.Expressions;
 using Xunit;
 
 namespace Ambev.DeveloperEvaluation.Unit.Application;
@@ -85,8 +86,8 @@ public class UpdateSaleHandlerTests
         _mapper.Map<Sale>(command).Returns(updatedSale);
         _saleRepository.UpdateAsync(command.Id, updatedSale, Arg.Any<CancellationToken>()).Returns(true);
 
-        _saleRepository.GetByIdAsync(command.Id, Arg.Any<CancellationToken>())
-            .Returns(originalSale);
+        _saleRepository.GetByIdAsync(command.Id, Arg.Any<CancellationToken>(), Arg.Any<Expression<Func<Sale, object>>[]>())
+            .Returns(originalSale, updatedSale);
 
         _saleRepository.UpdateAsync(command.Id, updatedSale, Arg.Any<CancellationToken>())
             .Returns(true);
@@ -111,7 +112,8 @@ public class UpdateSaleHandlerTests
 
         _mapper.Map<Sale>(command).Returns(updatedSale);
         _saleRepository.UpdateAsync(command.Id, updatedSale, Arg.Any<CancellationToken>()).Returns(true);
-        _saleRepository.GetByIdAsync(command.Id, Arg.Any<CancellationToken>()).Returns(updatedSale);
+        _saleRepository.GetByIdAsync(command.Id, Arg.Any<CancellationToken>(), Arg.Any<Expression<Func<Sale, object>>[]>())
+            .Returns(updatedSale);
         _mapper.Map<UpdateSaleResult>(updatedSale).Returns(result);
 
         // When
@@ -141,8 +143,8 @@ public class UpdateSaleHandlerTests
 
         _mapper.Map<Sale>(command).Returns(updatedSale);
         // Configure repository
-        _saleRepository.GetByIdAsync(command.Id, Arg.Any<CancellationToken>())
-            .Returns(originalSale, updatedSale); // first call: original, second call: updated
+        _saleRepository.GetByIdAsync(command.Id, Arg.Any<CancellationToken>(), Arg.Any<Expression<Func<Sale, object>>[]>())
+            .Returns(originalSale, updatedSale);
 
         _saleRepository.UpdateAsync(command.Id, updatedSale, Arg.Any<CancellationToken>())
             .Returns(true);
@@ -166,7 +168,7 @@ public class UpdateSaleHandlerTests
         await _eventDispatcher.Received(1)
             .PublishAsync(Arg.Any<SaleModifiedEvent>(), Arg.Any<CancellationToken>());
 
-        await _saleRepository.Received(2).GetByIdAsync(command.Id, Arg.Any<CancellationToken>());
+        await _saleRepository.Received(2).GetByIdAsync(command.Id, Arg.Any<CancellationToken>(), Arg.Any<Expression<Func<Sale, object>>[]>());
         await _saleRepository.Received(1).UpdateAsync(command.Id, updatedSale, Arg.Any<CancellationToken>());
     }
     /// <summary>
@@ -190,7 +192,7 @@ public class UpdateSaleHandlerTests
 
         _mapper.Map<Sale>(command).Returns(updatedSale);
 
-        _saleRepository.GetByIdAsync(command.Id, Arg.Any<CancellationToken>())
+        _saleRepository.GetByIdAsync(command.Id, Arg.Any<CancellationToken>(), Arg.Any<Expression<Func<Sale, object>>[]>())
             .Returns(originalSale, updatedSale);
 
         _saleRepository.UpdateAsync(command.Id, updatedSale, Arg.Any<CancellationToken>())
@@ -243,7 +245,7 @@ public class UpdateSaleHandlerTests
 
         _mapper.Map<Sale>(command).Returns(updatedSale);
 
-        _saleRepository.GetByIdAsync(command.Id, Arg.Any<CancellationToken>())
+        _saleRepository.GetByIdAsync(command.Id, Arg.Any<CancellationToken>(), Arg.Any<Expression<Func<Sale, object>>[]>())
             .Returns(originalSale, updatedSale);
 
         _saleRepository.UpdateAsync(command.Id, updatedSale, Arg.Any<CancellationToken>())
