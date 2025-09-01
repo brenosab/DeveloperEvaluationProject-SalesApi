@@ -10,6 +10,7 @@ public class UpdateSaleResult
     public string Branch { get; set; } = string.Empty;
     public decimal TotalAmount { get; set; }
     public List<UpdateSaleItemResult> Items { get; set; } = [];
+    public bool Cancelled { get; set; }
 }
 
 public class UpdateSaleItemResult
@@ -27,4 +28,5 @@ public class UpdateSaleItemResult
     public decimal UnitPrice { get; set; }
     public decimal Discount { get; set; }
     public decimal Total { get; set; }
+    public bool Cancelled { get; set; }
 }
