@@ -31,7 +31,7 @@ public class Sale : BaseEntity
     /// <summary>
     /// Gets or sets the collection of items in the sale.
     /// </summary>
-    public List<SaleItem> Items { get; set; } = new();
+    public List<SaleItem> Items { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the total sale amount (sum of all items after discounts).
