@@ -39,7 +39,7 @@ public class UpdateSaleHandler : IRequestHandler<UpdateSaleCommand, UpdateSaleRe
         await ValidateCommandAsync(command, cancellationToken);
 
         // 2. Get the original sale for comparison
-        var originalSale = await _saleRepository.GetByIdAsync(command.Id, cancellationToken);
+        var originalSale = await _saleRepository.GetByIdAsync(command.Id, cancellationToken, s => s.Items);
         if (originalSale == null)
             throw new KeyNotFoundException($"Sale with ID {command.Id} not found");
 
@@ -52,7 +52,7 @@ public class UpdateSaleHandler : IRequestHandler<UpdateSaleCommand, UpdateSaleRe
             throw new KeyNotFoundException($"Sale with ID {command.Id} not found");
 
         // 5. Get the updated entity
-        var updatedSale = await _saleRepository.GetByIdAsync(command.Id, cancellationToken);
+        var updatedSale = await _saleRepository.GetByIdAsync(command.Id, cancellationToken, s => s.Items);
 
         // 6. Publish domain events
         await DispatchEventsAsync(originalSale, updatedSale, cancellationToken);

@@ -15,8 +15,7 @@ public class UpdateSaleProfile : Profile
             .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.CustomerName ?? string.Empty))
             .ForMember(dest => dest.Branch, opt => opt.MapFrom(src => src.Branch))
             .ForMember(dest => dest.Items, opt => opt.MapFrom(src => src.Items))
-            .ForMember(dest => dest.TotalAmount, opt => opt.Ignore())
-            .ForMember(dest => dest.Cancelled, opt => opt.Ignore());
+            .ForMember(dest => dest.TotalAmount, opt => opt.Ignore());
 
         CreateMap<UpdateSaleItemCommand, SaleItem>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
@@ -31,8 +30,7 @@ public class UpdateSaleProfile : Profile
             .ForMember(dest => dest.Quantity, opt => opt.MapFrom(src => src.Quantity))
             .ForMember(dest => dest.UnitPrice, opt => opt.MapFrom(src => src.UnitPrice))
             .ForMember(dest => dest.Discount, opt => opt.Ignore())
-            .ForMember(dest => dest.Total, opt => opt.Ignore())
-            .ForMember(dest => dest.Cancelled, opt => opt.Ignore());
+            .ForMember(dest => dest.Total, opt => opt.Ignore());
 
         CreateMap<Sale, UpdateSaleResult>();
         CreateMap<SaleItem, UpdateSaleItemResult>();
